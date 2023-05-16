@@ -8,8 +8,21 @@ public class Boar extends Herbivores{
     public static final Integer MOVE_SPEED = 2;
     public static final Float HOW_MANY_FOOD_NEEDS = 50f;
 
+    public Boar(int x, int y) {
+        super(x, y);
+        setWeight(WEIGHT);
+    }
+
     @Override
     public String getEmoji() {
         return EMOJI_BOAR;
+    }
+    @Override
+    public int maxSpeed() {
+        return Boar.MOVE_SPEED;
+    }
+    @Override
+    public float getMaxWeight() {
+        return WEIGHT;
     }
 }

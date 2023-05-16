@@ -8,8 +8,22 @@ public class Goat  extends Herbivores{
     public static final Integer MOVE_SPEED = 3;
     public static final Float HOW_MANY_FOOD_NEEDS = 10f;
 
+    public Goat(int x, int y) {
+        super(x, y);
+        setWeight(WEIGHT);
+    }
+
     @Override
     public String getEmoji() {
         return EMOJI_GOAT;
+    }
+
+    @Override
+    public int maxSpeed() {
+        return Goat.MOVE_SPEED;
+    }
+    @Override
+    public float getMaxWeight() {
+        return WEIGHT;
     }
 }

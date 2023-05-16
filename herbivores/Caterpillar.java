@@ -8,8 +8,21 @@ public class Caterpillar extends Herbivores{
     public static final Integer MOVE_SPEED = 0;
     public static final Float HOW_MANY_FOOD_NEEDS = 0f;
 
+    public Caterpillar(int x, int y) {
+        super(x, y);
+        setWeight(WEIGHT);
+    }
+
     @Override
     public String getEmoji() {
         return EMOJI_CATERPILLAR;
+    }
+    @Override
+    public int maxSpeed() {
+        return Caterpillar.MOVE_SPEED;
+    }
+    @Override
+    public float getMaxWeight() {
+        return WEIGHT;
     }
 }

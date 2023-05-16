@@ -1,7 +1,6 @@
 package plants;
 
-import main.Animal;
-import main.FlorAndFauna;
+import main.*;
 
 public class Plants implements FlorAndFauna{
     //emoji
@@ -46,6 +45,38 @@ public class Plants implements FlorAndFauna{
         return y;
     }
 
+    @Override
+    public int maxSpeed() {
+        return Plants.MOVE_SPEED;
+    }
+
+    @Override
+    public float getWeight() {
+        return this.currentWeight;
+    }
+
+    @Override
+    public float getMaxWeight() {
+
+        System.out.println("Максимальный вес не ограничен растения ростут постоянно");
+        return Float.MAX_VALUE;
+    }
+
+    @Override
+    public void setWeight(float weight) {
+        this.currentWeight = weight;
+
+    }
+
+    @Override
+    public boolean dead(IslandLocationCell[][] islandLocationCells) {
+        int x = this.x;
+        int y = this.y;
+        int positionFlorAndFauna = GenerateRandomFlorAndFauna.POSITION.get(this.getClass().getSimpleName());
+        int positionOnArray = islandLocationCells[x][y].arraysCell.get(positionFlorAndFauna).indexOf(this);
+        return (boolean) islandLocationCells[x][y].arraysCell.get(positionFlorAndFauna).remove(positionOnArray);
+    }
+
 
     @Override
     public String getEmoji() {
@@ -53,8 +84,13 @@ public class Plants implements FlorAndFauna{
     }
 
     public void grow(){
-        currentWeight = currentWeight + 1f;
+        currentWeight = currentWeight + 0.5f;
 
+    }
+
+    @Override
+    public String toString() {
+        return getEmoji();
     }
 
 

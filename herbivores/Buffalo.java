@@ -8,8 +8,22 @@ public class Buffalo extends Herbivores{
     public static final Integer MOVE_SPEED = 3;
     public static final Float HOW_MANY_FOOD_NEEDS = 100f;
 
+    public Buffalo(int x, int y) {
+        super(x, y);
+        setWeight(WEIGHT);
+    }
+
     @Override
     public String getEmoji() {
         return EMOJI_BUFFALO;
+    }
+    @Override
+    public int maxSpeed() {
+        return Buffalo.MOVE_SPEED;
+    }
+
+    @Override
+    public float getMaxWeight() {
+        return WEIGHT;
     }
 }

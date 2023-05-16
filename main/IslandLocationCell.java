@@ -4,66 +4,61 @@ import herbivores.*;
 import plants.Plants;
 import predator.*;
 
+import java.util.Arrays;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public class IslandLocationCell {
+    public CopyOnWriteArrayList<CopyOnWriteArrayList> arraysCell = new CopyOnWriteArrayList<>(Arrays.asList(
+            new CopyOnWriteArrayList<Wolf>(),
+            new CopyOnWriteArrayList<BoaСonstrictor>(),
+            new CopyOnWriteArrayList<Fox>(),
+            new CopyOnWriteArrayList<Bear>(),
+            new CopyOnWriteArrayList<Eagle>(),
+            new CopyOnWriteArrayList<Horse>(),
+            new CopyOnWriteArrayList<Deer>(),
+            new CopyOnWriteArrayList<Rabbit>(),
+            new CopyOnWriteArrayList<Mouse>(),
+            new CopyOnWriteArrayList<Goat>(),
+            new CopyOnWriteArrayList<Sheep>(),
+            new CopyOnWriteArrayList<Boar>(),
+            new CopyOnWriteArrayList<Buffalo>(),
+            new CopyOnWriteArrayList<Duck>(),
+            new CopyOnWriteArrayList<Caterpillar>(),
+            new CopyOnWriteArrayList<Plants>()
+    ));
+
    private int x;
    private int y;
-   private int amountPlants = 100;
-   private int amountPredator = 100;
-   private int amountHerbivores = 50;
-   private GenerateRandomFlorAndFauna generateRandomFlorAndFauna = new GenerateRandomFlorAndFauna(this.x, this.y);
-   public CopyOnWriteArrayList<Plants> islandPlants;
-   public CopyOnWriteArrayList<Predator> islandPredator;
-   public CopyOnWriteArrayList<Herbivores> islandHerbivores;
-
-
+   private int amountPlants = 25;
+   private int amountPredator = 10;
+   private int amountHerbivores = 20;
+   private GenerateRandomFlorAndFauna generateRandomFlorAndFauna;
     public IslandLocationCell(int x, int y) {
         this.x = x;
         this.y = y;
-        this.islandPlants = addPlants(amountPlants);
-        this.islandPredator = addPredator(amountPredator);
-        this.islandHerbivores = addHerbivores(amountHerbivores);
+        generateRandomFlorAndFauna = new GenerateRandomFlorAndFauna(this.x, this.y);
+        addFlorAndFauna();
     }
 
-    private CopyOnWriteArrayList<Plants> addPlants(int amountPlants){
-        CopyOnWriteArrayList<Plants> arrayListPlants = new CopyOnWriteArrayList<>();
-        for (int i = 0; i < amountPlants ; i++) {
-            arrayListPlants.add(i, generateRandomFlorAndFauna.createPlants());
+    private void addFlorAndFauna(){
+        for (int i = 0; i < amountPlants; i++) {
+            int indexPlants = GenerateRandomFlorAndFauna.POSITION.get("Plants");
+            arraysCell.get(indexPlants).add(generateRandomFlorAndFauna.createPlants());
         }
-        return arrayListPlants;
-    }
 
-    private CopyOnWriteArrayList<Predator> addPredator(int amountPlants){
-        CopyOnWriteArrayList<Predator> arrayListPredator = new CopyOnWriteArrayList<>();
-        for (int i = 0; i < amountPredator ; i++) {
-            arrayListPredator.add(i, generateRandomFlorAndFauna.randomPredatorCreator());
+        for (int i = 0; i < amountPredator; i++) {
+            Predator predator = generateRandomFlorAndFauna.randomPredatorCreator();
+            String namePredator = predator.getClass().getSimpleName();
+            int indexPredator = GenerateRandomFlorAndFauna.POSITION.get(namePredator);
+            arraysCell.get(indexPredator).add(predator);
         }
-        return arrayListPredator;
-    }
 
-    private CopyOnWriteArrayList<Herbivores> addHerbivores(int amountPlants){
-        CopyOnWriteArrayList<Herbivores> arrayListHerbivores = new CopyOnWriteArrayList<>();
-        for (int i = 0; i < amountHerbivores ; i++) {
-            arrayListHerbivores.add(i, generateRandomFlorAndFauna.randomHerbivoresCreator());
+        for (int i = 0; i < amountHerbivores; i++) {
+            Herbivores herbivores = generateRandomFlorAndFauna.randomHerbivoresCreator();
+            String nameHerbivores = herbivores.getClass().getSimpleName();
+            int indexHerbivores = GenerateRandomFlorAndFauna.POSITION.get(nameHerbivores);
+            arraysCell.get(indexHerbivores).add(herbivores);
         }
-        return arrayListHerbivores;
     }
 
-
-
-    @Override
-    public String toString() {
-        return "IslandLocationCell{" +
-                "x=" + x +
-                ", y=" + y +
-                ", amountPlants=" + amountPlants +
-                ", amountPredator=" + amountPredator +
-                ", amountHerbivores=" + amountHerbivores +
-                ", generateRandomFlorAndFauna=" + generateRandomFlorAndFauna +
-                ", islandPlants=" + islandPlants.toString()  +
-                ", islandPredator=" + islandPredator +
-                ", islandHerbivores=" + islandHerbivores +
-                '}';
-    }
 }

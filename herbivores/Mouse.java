@@ -8,9 +8,23 @@ public class Mouse extends Herbivores{
     public static final Integer MOVE_SPEED = 1;
     public static final Float HOW_MANY_FOOD_NEEDS = 0.01f;
 
+    public Mouse(int x, int y) {
+        super(x, y);
+        setWeight(WEIGHT);
+    }
+
     @Override
     public String getEmoji() {
         return EMOJI_MOUSE;
+    }
+
+    @Override
+    public int maxSpeed() {
+        return Mouse.MOVE_SPEED;
+    }
+    @Override
+    public float getMaxWeight() {
+        return WEIGHT;
     }
 
 

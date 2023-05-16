@@ -1,5 +1,7 @@
 package predator;
 
+import herbivores.Rabbit;
+
 public class BoaСonstrictor extends Predator{
     //emoji
     public static final String EMOJI_BOA_CONSTRICTOR = "\uD83D\uDC0D";
@@ -7,9 +9,23 @@ public class BoaСonstrictor extends Predator{
     public static final Integer MAX_AMOUNT = 30;
     public static final Integer MOVE_SPEED = 1;
     public static final Float HOW_MANY_FOOD_NEEDS = 3f;
+
+    public BoaСonstrictor(int x, int y) {
+        super(x, y);
+        setWeight(WEIGHT);
+    }
+
     @Override
     public String getEmoji() {
         return EMOJI_BOA_CONSTRICTOR;
+    }
+    @Override
+    public int maxSpeed() {
+        return BoaСonstrictor.MOVE_SPEED;
+    }
+    @Override
+    public float getMaxWeight() {
+        return WEIGHT;
     }
 
 
