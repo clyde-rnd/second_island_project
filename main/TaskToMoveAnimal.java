@@ -27,29 +27,40 @@ public class TaskToMoveAnimal implements Runnable{
                             //Проверяем могжет-ли данный вид передвигаться
                             if(objectFlorAndFaunaElement.maxSpeed()!=0){
                                 Animal tempAnimal = (Animal) objectFlorAndFaunaElement;
-                                //При перемещении особь теряет вес
-                                tempAnimal.toLoseWeight();
-                                //Если вес стал меньше или равен 0, то избавляемся от этой осаби
-                                if(tempAnimal.getWeight()<=0){
-                                    //tempAnimal.Dead();
-                                    tempAnimal.dead(islandLocationCells);
-                                    //Если вес нормальный, то перемещаемся
-                                }else {
-
                                     //удаляем ее со старой прозиции
                                     tempAnimal.dead(islandLocationCells);
                                     //менфем координаты у особи которую собераемся переместить
                                     tempAnimal.move(boardHeight, boardWidth);
-
-                                    //довабляем на новуюю позицию в конец списка
+                                    //При перемещении особь теряет вес
+                                    tempAnimal.toLoseWeight();
+                                    //Если вес  > 0, то то записываем новую позицию
+                                //довабляем на новуюю позицию в конец списка
+                                if(tempAnimal.getWeight()>=0){
                                     islandLocationCells[tempAnimal.getX()][tempAnimal.getY()].arraysCell.get(positionOnArraysCell).add(tempAnimal);
+                                    FlorAndFauna florAndFauna = tempAnimal.chooseVictim(islandLocationCells[tempAnimal.getX()][tempAnimal.getY()].arraysCell);
+                                    if (florAndFauna == null){
+                                        System.out.println("null");
+                                    }else {
+                                        System.out.println("Not null");
+                                        System.out.println("Eat: " + tempAnimal.eat(florAndFauna, islandLocationCells));
+
+                                    }
                                 }
+
                             }
                         }
                     }
                 }
             }
 
+
+        }
+        Thread thread = new Thread(new TaskPrintStatistic(islandLocationCells));
+        thread.start();
+        try {
+            thread.join();
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
         }
 
     }

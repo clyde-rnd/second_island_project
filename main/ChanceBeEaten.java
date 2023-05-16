@@ -1,11 +1,6 @@
 package main;
 
-import predator.Eagle;
-
-import java.util.HashMap;
-import java.util.Map;
-
-public class СhanceBeEaten {
+public class ChanceBeEaten {
 
 
     private static final int[][] ARRAY_OF_PROBABILITIES = {
