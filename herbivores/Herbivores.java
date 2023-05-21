@@ -15,21 +15,23 @@ public abstract class Herbivores extends Animal {
     @Override
     public FlorAndFauna chooseVictim(CopyOnWriteArrayList<CopyOnWriteArrayList> islandLocation) {
         int count;
-        if (this instanceof Duck) {
-            count = islandLocation.get(GenerateRandomFlorAndFauna.POSITION.get("Caterpillar")).size();
-            if (count > 0) {
-                return (FlorAndFauna) islandLocation.get(GenerateRandomFlorAndFauna.POSITION.get("Caterpillar")).get(ThreadLocalRandom.current().nextInt(0, count));
-            } else {
-                count = islandLocation.get(GenerateRandomFlorAndFauna.POSITION.get("Plants")).size();
-                if (count > 0) {
-                    return (FlorAndFauna) islandLocation.get(GenerateRandomFlorAndFauna.POSITION.get("Plants")).get(ThreadLocalRandom.current().nextInt(0, count));
-                }else return null;
-            }
+        int position;
+
+        if (this instanceof Duck || this instanceof Mouse){
+            int [] array = {GenerateRandomFlorAndFauna.POSITION.get("Caterpillar"), GenerateRandomFlorAndFauna.POSITION.get("Plants")};
+            position = array[ThreadLocalRandom.current().nextInt(0, array.length)];
+        } else if (this instanceof Boar) {
+            int [] array = {GenerateRandomFlorAndFauna.POSITION.get("Caterpillar"),
+                    GenerateRandomFlorAndFauna.POSITION.get("Plants"), GenerateRandomFlorAndFauna.POSITION.get("Mouse")};
+            position = array[ThreadLocalRandom.current().nextInt(0, array.length)];
+
         }else {
-            count = islandLocation.get(GenerateRandomFlorAndFauna.POSITION.get("Plants")).size();
-            if (count > 0) {
-                return (FlorAndFauna) islandLocation.get(GenerateRandomFlorAndFauna.POSITION.get("Plants")).get(ThreadLocalRandom.current().nextInt(0, count));
-            }
+            position = GenerateRandomFlorAndFauna.POSITION.get("Plants");
+        }
+
+        count = islandLocation.get(position).size();
+        if (count > 0) {
+            return (FlorAndFauna) islandLocation.get(position).get(ThreadLocalRandom.current().nextInt(0, count));
         }
         return null;
     }

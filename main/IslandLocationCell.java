@@ -7,10 +7,10 @@ import predator.*;
 import java.util.Arrays;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-public class IslandLocationCell {
+public class  IslandLocationCell {
     public CopyOnWriteArrayList<CopyOnWriteArrayList> arraysCell = new CopyOnWriteArrayList<>(Arrays.asList(
             new CopyOnWriteArrayList<Wolf>(),
-            new CopyOnWriteArrayList<BoaСonstrictor>(),
+            new CopyOnWriteArrayList<BoaConstrictor>(),
             new CopyOnWriteArrayList<Fox>(),
             new CopyOnWriteArrayList<Bear>(),
             new CopyOnWriteArrayList<Eagle>(),
@@ -29,7 +29,7 @@ public class IslandLocationCell {
 
    private int x;
    private int y;
-   private int amountPlants = 25;
+   private int amountPlants = 30;
    private int amountPredator = 10;
    private int amountHerbivores = 20;
    private GenerateRandomFlorAndFauna generateRandomFlorAndFauna;

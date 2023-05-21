@@ -4,7 +4,7 @@ import java.time.LocalDateTime;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public class TaskToMoveAnimal implements Runnable{
-    private IslandLocationCell[][] islandLocationCells;
+    private volatile IslandLocationCell[][] islandLocationCells;
     private int boardHeight;
     private int boardWidth;
 
@@ -25,43 +25,25 @@ public class TaskToMoveAnimal implements Runnable{
                             int positionOnArraysCell = GenerateRandomFlorAndFauna.POSITION.get(objectFlorAndFaunaElement.getClass().getSimpleName());
                             int positionOnArray = arrayFlorAndFaunaElement.indexOf(objectFlorAndFaunaElement);
                             //Проверяем могжет-ли данный вид передвигаться
-                            if(objectFlorAndFaunaElement.maxSpeed()!=0){
+                            if (objectFlorAndFaunaElement.maxSpeed() != 0) {
                                 Animal tempAnimal = (Animal) objectFlorAndFaunaElement;
-                                    //удаляем ее со старой прозиции
-                                    tempAnimal.dead(islandLocationCells);
-                                    //менфем координаты у особи которую собераемся переместить
-                                    tempAnimal.move(boardHeight, boardWidth);
-                                    //При перемещении особь теряет вес
-                                    tempAnimal.toLoseWeight();
-                                    //Если вес  > 0, то то записываем новую позицию
+                                //удаляем ее со старой прозиции
+                                tempAnimal.dead(islandLocationCells);
+                                //меняем координаты у особи которую собераемся переместить
+                                tempAnimal.move(boardHeight, boardWidth);
+                                //При перемещении особь теряет вес
+                                tempAnimal.toLoseWeight();
+                                //Если вес  > 0, то то записываем новую позицию
                                 //довабляем на новуюю позицию в конец списка
-                                if(tempAnimal.getWeight()>=0){
+                                if (tempAnimal.getWeight() >= 0) {
                                     islandLocationCells[tempAnimal.getX()][tempAnimal.getY()].arraysCell.get(positionOnArraysCell).add(tempAnimal);
-                                    FlorAndFauna florAndFauna = tempAnimal.chooseVictim(islandLocationCells[tempAnimal.getX()][tempAnimal.getY()].arraysCell);
-                                    if (florAndFauna == null){
-                                        System.out.println("null");
-                                    }else {
-                                        System.out.println("Not null");
-                                        System.out.println("Eat: " + tempAnimal.eat(florAndFauna, islandLocationCells));
-
-                                    }
                                 }
-
                             }
+                        }
                         }
                     }
                 }
             }
-
-
-        }
-        Thread thread = new Thread(new TaskPrintStatistic(islandLocationCells));
-        thread.start();
-        try {
-            thread.join();
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
 
     }
 }

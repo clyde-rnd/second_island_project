@@ -20,7 +20,7 @@ public class GenerateRandomFlorAndFauna {
 
     public final static Map<String, Integer> POSITION = new HashMap<>(){{
         put("Wolf", 0);
-        put("BoaСonstrictor", 1);
+        put("BoaConstrictor", 1);
         put("Fox", 2);
         put("Bear", 3);
         put("Eagle", 4);
@@ -59,7 +59,7 @@ public class GenerateRandomFlorAndFauna {
         String nameClass = arrayClassName[random.nextInt(0,15)];
         return switch (nameClass) {
             case "Wolf" -> new Wolf(this.x, this.y);
-            case "BoaConstrictor" -> new BoaСonstrictor(this.x, this.y);
+            case "BoaConstrictor" -> new BoaConstrictor(this.x, this.y);
             case "Fox" -> new Fox(this.x, this.y);
             case "Bear" -> new Bear(this.x, this.y);
             case "Eagle" -> new Eagle(this.x, this.y);
@@ -81,7 +81,7 @@ public class GenerateRandomFlorAndFauna {
         String nameClass = arrayClassName[random.nextInt(0,5)];
         return switch (nameClass) {
             case "Wolf" -> new Wolf(this.x, this.y);
-            case "BoaConstrictor" -> new BoaСonstrictor(this.x, this.y);
+            case "BoaConstrictor" -> new BoaConstrictor(this.x, this.y);
             case "Fox" -> new Fox(this.x, this.y);
             case "Bear" -> new Bear(this.x, this.y);
             case "Eagle" -> new Eagle(this.x, this.y);
@@ -109,5 +109,26 @@ public class GenerateRandomFlorAndFauna {
 
     public Plants createPlants(){
         return new Plants(this.x, this.y);
+    }
+
+    public Animal AnimalCreator (String nameClass){
+        return switch (nameClass) {
+            case "Wolf" -> new Wolf(this.x, this.y);
+            case "BoaConstrictor" -> new BoaConstrictor(this.x, this.y);
+            case "Fox" -> new Fox(this.x, this.y);
+            case "Bear" -> new Bear(this.x, this.y);
+            case "Eagle" -> new Eagle(this.x, this.y);
+            case "Horse" -> new Horse(this.x, this.y);
+            case "Deer" -> new Deer(this.x, this.y);
+            case "Rabbit" -> new Rabbit(this.x, this.y);
+            case "Mouse" -> new Mouse(this.x, this.y);
+            case "Goat" -> new Goat(this.x, this.y);
+            case "Sheep" -> new Sheep(this.x, this.y);
+            case "Boar" -> new Boar(this.x, this.y);
+            case "Buffalo" -> new Buffalo(this.x, this.y);
+            case "Duck" -> new Duck(this.x, this.y);
+            case "Caterpillar" -> new Caterpillar(this.x, this.y);
+            default -> throw new RuntimeException();
+        };
     }
 }

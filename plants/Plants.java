@@ -74,8 +74,12 @@ public class Plants implements FlorAndFauna{
         int y = this.y;
         int positionFlorAndFauna = GenerateRandomFlorAndFauna.POSITION.get(this.getClass().getSimpleName());
         int positionOnArray = islandLocationCells[x][y].arraysCell.get(positionFlorAndFauna).indexOf(this);
-        islandLocationCells[x][y].arraysCell.get(positionFlorAndFauna).remove(positionOnArray);
-        return true;
+        if(this.getCurrentWeight()<=0){
+            islandLocationCells[x][y].arraysCell.get(positionFlorAndFauna).remove(positionOnArray);
+            return true;
+        }
+        return false;
+
     }
 
 

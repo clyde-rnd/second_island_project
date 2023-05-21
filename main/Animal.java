@@ -1,16 +1,13 @@
 package main;
 
-import herbivores.Duck;
-import herbivores.Herbivores;
-import predator.Predator;
-
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ThreadLocalRandom;
 
 public abstract class Animal implements FlorAndFauna {
-    private int x;
-    private int y;
-    private float weight;
+    private volatile int x;
+    private volatile int y;
+    private float currentWeight;
+    private GenerateRandomFlorAndFauna generateRandomFlorAndFauna = new GenerateRandomFlorAndFauna(x,y);
 
     public Animal(int x, int y) {
         this.x = x;
@@ -43,27 +40,28 @@ public abstract class Animal implements FlorAndFauna {
         return getEmoji();
     }
 
-    public boolean eat(FlorAndFauna florAndFauna, IslandLocationCell[][] islandLocationCells) {
-        String whoEaten;
-        String whoIsBeingEaten;
-        whoEaten = this.getClass().getSimpleName();
-        whoIsBeingEaten = florAndFauna.getClass().getSimpleName();
-        int chanceBeEaten = ChanceBeEaten.chanceBeEatenMethod(whoEaten, whoIsBeingEaten);
-        if (chanceBeEaten > 0) {
-            if ((ThreadLocalRandom.current().nextInt(1, 101)) <= chanceBeEaten) {
-                float newWeight = Math.min((this.getWeight() + florAndFauna.getWeight()), this.getMaxWeight());
-                this.setWeight(newWeight);
-                florAndFauna.dead(islandLocationCells);
-                return true;
+    synchronized public boolean eat(FlorAndFauna florAndFauna, IslandLocationCell[][] islandLocationCells) {
+            String whoEaten;
+            String whoIsBeingEaten;
+            whoEaten = this.getClass().getSimpleName();
+            whoIsBeingEaten = florAndFauna.getClass().getSimpleName();
+            int chanceBeEaten = ChanceBeEaten.chanceBeEatenMethod(whoEaten, whoIsBeingEaten);
+            if (chanceBeEaten > 0) {
+                if ((ThreadLocalRandom.current().nextInt(1, 101)) <= chanceBeEaten) {
+                    float needAddWeight = this.getMaxWeight() - getWeight();
+                    float newWeight = Math.min((this.getWeight() + florAndFauna.getWeight()), this.getMaxWeight());
+                    this.setWeight(newWeight);
+                    florAndFauna.setWeight(florAndFauna.getWeight() - newWeight);
+                    florAndFauna.dead(islandLocationCells);
+                    return true;
+                }
             }
-        }
-        return false;
-
+            return false;
 
     }
 
-    public void reproduction() {
-        System.out.println("I'm reproduction");
+    public Animal reproduction() {
+        return (Animal) generateRandomFlorAndFauna.AnimalCreator(this.getClass().getSimpleName());
     }
 
     public void move(int boardHeight, int boardWidth) {
@@ -116,28 +114,32 @@ public abstract class Animal implements FlorAndFauna {
     }
 
     @Override
-    public boolean dead(IslandLocationCell[][] islandLocationCells) {
-        int x = this.x;
-        int y = this.y;
-        int positionFlorAndFauna = GenerateRandomFlorAndFauna.POSITION.get(this.getClass().getSimpleName());
-        int positionOnArray = islandLocationCells[x][y].arraysCell.get(positionFlorAndFauna).indexOf(this);
-        islandLocationCells[x][y].arraysCell.get(positionFlorAndFauna).remove(positionOnArray);
-        return true;
+    synchronized public boolean dead(IslandLocationCell[][] islandLocationCells) {
+            int x = this.x;
+            int y = this.y;
+            int positionFlorAndFauna = GenerateRandomFlorAndFauna.POSITION.get(this.getClass().getSimpleName());
+            int positionOnArray = islandLocationCells[x][y].arraysCell.get(positionFlorAndFauna).indexOf(this);
+            if (positionOnArray != -1){
+                islandLocationCells[x][y].arraysCell.get(positionFlorAndFauna).remove(positionOnArray);
+            }
+
+            return true;
+
     }
 
     @Override
     public float getWeight() {
-        return weight;
+        return currentWeight;
     }
 
     @Override
 
     public void setWeight(float weight) {
-        this.weight = weight;
+        this.currentWeight = weight;
     }
 
     public void toLoseWeight() {
-        this.weight = this.weight - getMaxWeight() * 0.5f;
+        this.currentWeight = this.currentWeight - getMaxWeight() * 0.1f;
     }
 
     public abstract FlorAndFauna chooseVictim(CopyOnWriteArrayList<CopyOnWriteArrayList> islandLocation);
