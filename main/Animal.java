@@ -40,7 +40,7 @@ public abstract class Animal implements FlorAndFauna {
         return getEmoji();
     }
 
-    synchronized public boolean eat(FlorAndFauna florAndFauna, IslandLocationCell[][] islandLocationCells) {
+    synchronized public boolean eat(FlorAndFauna florAndFauna) {
             String whoEaten;
             String whoIsBeingEaten;
             whoEaten = this.getClass().getSimpleName();
@@ -52,7 +52,7 @@ public abstract class Animal implements FlorAndFauna {
                     float newWeight = Math.min((this.getWeight() + florAndFauna.getWeight()), this.getMaxWeight());
                     this.setWeight(newWeight);
                     florAndFauna.setWeight(florAndFauna.getWeight() - newWeight);
-                    florAndFauna.dead(islandLocationCells);
+                    florAndFauna.death();
                     return true;
                 }
             }
@@ -61,15 +61,19 @@ public abstract class Animal implements FlorAndFauna {
     }
 
     public Animal reproduction() {
+        Statistic.setStatisticBirthEvent(this.getEmoji()+"-Birth");
         return (Animal) generateRandomFlorAndFauna.AnimalCreator(this.getClass().getSimpleName());
     }
 
-    public void move(int boardHeight, int boardWidth) {
+    synchronized public void move( int boardHeight, int boardWidth) {
+        CopyOnWriteArrayList<CopyOnWriteArrayList<IslandLocationCell>> islandLocationCells = GamePlay.islandLocationCells;
+        int newX;
+        int newY;
         if ((ThreadLocalRandom.current().nextInt(1, 3)) % 2 == 0) {
             int amountStep = maxSpeed();
             int randomStep = ThreadLocalRandom.current().nextInt(-amountStep, amountStep + 1);
             amountStep = amountStep - Math.abs(randomStep);
-            int newX = x + randomStep;
+            newX = x + randomStep;
             if (newX >= boardHeight) {
                 newX = newX - boardHeight;
             } else if (newX < 0) {
@@ -77,20 +81,18 @@ public abstract class Animal implements FlorAndFauna {
             }
             randomStep = ThreadLocalRandom.current().nextInt(-amountStep, amountStep + 1);
             amountStep = amountStep - Math.abs(randomStep);
-            int newY = y + randomStep;
+            newY = y + randomStep;
             if (newY >= boardWidth) {
                 newY = newY - boardWidth;
             } else if (newY < 0) {
                 newY = newY + boardWidth;
             }
-            this.x = newX;
-            this.y = newY;
 
         } else {
             int amountStep = maxSpeed();
             int randomStep = ThreadLocalRandom.current().nextInt(-amountStep, amountStep + 1);
             amountStep = amountStep - Math.abs(randomStep);
-            int newY = y + randomStep;
+            newY = y + randomStep;
             if (newY >= boardWidth) {
                 newY = newY - (boardHeight);
             } else if (newY < 0) {
@@ -98,29 +100,46 @@ public abstract class Animal implements FlorAndFauna {
             }
             randomStep = ThreadLocalRandom.current().nextInt(-amountStep, amountStep + 1);
             amountStep = amountStep - Math.abs(randomStep);
-            int newX = x + randomStep;
+            newX = x + randomStep;
             if (newX >= boardHeight) {
                 newX = newX - (boardHeight);
             } else if (newX < 0) {
                 newX = newX + (boardHeight);
             }
-            this.x = newX;
-            this.y = newY;
+
+
         }
+        int positionFlorAndFauna = GenerateRandomFlorAndFauna.POSITION.get(this.getClass().getSimpleName());
+        int positionOnArray = GamePlay.islandLocationCells.get(x).get(y).arraysCell.get(positionFlorAndFauna).indexOf(this);
+        if (positionOnArray != -1){
+            islandLocationCells.get(x).get(y).arraysCell.get(positionFlorAndFauna).remove(positionOnArray);
+            //При перемещении особь теряет вес
+            this.toLoseWeight();
+            //Если вес  > 0, то то записываем новую позицию
+            //довабляем на новуюю позицию в конец списка
+            if (this.getWeight() >= 0) {
+                this.x = newX;
+                this.y = newY;
+                islandLocationCells.get(x).get(y).arraysCell.get(positionFlorAndFauna).add(this);
+            }else {
+                Statistic.setDeathStatisticEvent(this.getEmoji()+"-"+"\uD83D\uDC80");
+            }
+        }
+
     }
+
 
     public void beEaten() {
         System.out.println("BeEaten");
     }
 
     @Override
-    synchronized public boolean dead(IslandLocationCell[][] islandLocationCells) {
-            int x = this.x;
-            int y = this.y;
+    synchronized public boolean death() {
             int positionFlorAndFauna = GenerateRandomFlorAndFauna.POSITION.get(this.getClass().getSimpleName());
-            int positionOnArray = islandLocationCells[x][y].arraysCell.get(positionFlorAndFauna).indexOf(this);
+            int positionOnArray = GamePlay.islandLocationCells.get(x).get(y).arraysCell.get(positionFlorAndFauna).indexOf(this);
             if (positionOnArray != -1){
-                islandLocationCells[x][y].arraysCell.get(positionFlorAndFauna).remove(positionOnArray);
+                GamePlay.islandLocationCells.get(x).get(y).arraysCell.get(positionFlorAndFauna).remove(positionOnArray);
+                Statistic.setDeathStatisticEvent(this.getEmoji()+"-"+"\uD83D\uDC80");
             }
 
             return true;

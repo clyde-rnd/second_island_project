@@ -6,25 +6,36 @@ import java.time.LocalDateTime;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public class Statistic implements Runnable{
-    private volatile IslandLocationCell[][] islandLocationCells;
-    private static CopyOnWriteArrayList<String> statisticEventList = new CopyOnWriteArrayList<>();
+    private volatile CopyOnWriteArrayList<CopyOnWriteArrayList<IslandLocationCell>> islandLocationCells = GamePlay.islandLocationCells;
+    private static CopyOnWriteArrayList<String> statisticEatEventList = new CopyOnWriteArrayList<>();
+    private static CopyOnWriteArrayList<String> statisticDeathEventList = new CopyOnWriteArrayList<>();
+
+    private static CopyOnWriteArrayList<String> statisticBirthEventList = new CopyOnWriteArrayList<>();
     private static void clearStatistic (){
-        statisticEventList.clear();
+        statisticEatEventList.clear();
+        statisticDeathEventList.clear();
+        statisticBirthEventList.clear();
     }
 
-    public static void setStatisticEvent (String event){
-        statisticEventList.add(event);
+    public static void setEatStatisticEvent(String event){
+        statisticEatEventList.add(event);
+    }
+    public static void setDeathStatisticEvent(String event){
+        statisticDeathEventList.add(event);
+    }
+    public static void setStatisticBirthEvent(String event){
+        statisticBirthEventList.add(event);
     }
 
-
-    public Statistic(IslandLocationCell[][] islandLocationCells) {
-        this.islandLocationCells = islandLocationCells;
-    }
     @Override
     public void run() {
         if (!Thread.currentThread().isInterrupted()) {
             System.out.println(LocalDateTime.now()+" TaskPrintStatistic Started");
-            printStatisticEvent(Statistic.statisticEventList);
+            printStatisticEvent(Statistic.statisticEatEventList);
+            System.out.println("Print Death statistic");
+            printStatisticEvent(Statistic.statisticDeathEventList);
+            System.out.println("Print Birth statistic");
+            printStatisticEvent(Statistic.statisticBirthEventList);
             System.out.println("Print Cell");
             System.out.println();
             printEmojiGameBoard(islandLocationCells);
@@ -37,11 +48,11 @@ public class Statistic implements Runnable{
 
     }
 
-    private void printEmojiGameBoard(IslandLocationCell[][] islandLocationCells){
-        for (int i = 0; i < islandLocationCells.length; i++) {
-            for (int j = 0; j < islandLocationCells[i].length; j++) {
+    private void printEmojiGameBoard(CopyOnWriteArrayList<CopyOnWriteArrayList<IslandLocationCell>> islandLocationCells){
+        for (int i = 0; i < islandLocationCells.size(); i++) {
+            for (int j = 0; j < islandLocationCells.get(i).size(); j++) {
                 System.out.print("Cell - " + i + "X" + j + " ");
-                for (CopyOnWriteArrayList<FlorAndFauna> element: islandLocationCells[i][j].arraysCell) {
+                for (CopyOnWriteArrayList<FlorAndFauna> element: islandLocationCells.get(i).get(j).arraysCell) {
                     for (FlorAndFauna florAndFaunElement: element) {
                         if (florAndFaunElement instanceof Plants){
                             System.out.print(florAndFaunElement.getEmoji()+"-"+((Plants) florAndFaunElement).getCurrentWeight());
@@ -69,4 +80,6 @@ public class Statistic implements Runnable{
             }
         }
     }
+
+
 }

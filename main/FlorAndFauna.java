@@ -10,6 +10,7 @@ public interface FlorAndFauna {
     public float getWeight();
     public float getMaxWeight();
     public void setWeight(float weight);
-    public  boolean dead(IslandLocationCell[][] islandLocationCells);
+    public  boolean death();
+
 
 }

@@ -69,13 +69,12 @@ public class Plants implements FlorAndFauna{
     }
 
     @Override
-    public boolean dead(IslandLocationCell[][] islandLocationCells) {
-        int x = this.x;
-        int y = this.y;
+    synchronized public boolean death() {
         int positionFlorAndFauna = GenerateRandomFlorAndFauna.POSITION.get(this.getClass().getSimpleName());
-        int positionOnArray = islandLocationCells[x][y].arraysCell.get(positionFlorAndFauna).indexOf(this);
+        int positionOnArray = GamePlay.islandLocationCells.get(x).get(y).arraysCell.get(positionFlorAndFauna).indexOf(this);
         if(this.getCurrentWeight()<=0){
-            islandLocationCells[x][y].arraysCell.get(positionFlorAndFauna).remove(positionOnArray);
+            GamePlay.islandLocationCells.get(x).get(y).arraysCell.get(positionFlorAndFauna).remove(positionOnArray);
+            Statistic.setDeathStatisticEvent(this.getEmoji()+"-"+"\uD83D\uDC80");
             return true;
         }
         return false;

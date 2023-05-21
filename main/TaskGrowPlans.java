@@ -7,18 +7,14 @@ import java.time.LocalDateTime;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public class TaskGrowPlans implements Runnable {
-    private volatile IslandLocationCell[][] islandLocationCells;
-
-    public TaskGrowPlans(IslandLocationCell[][] islandLocationCells) {
-        this.islandLocationCells = islandLocationCells;
-    }
+    private volatile CopyOnWriteArrayList<CopyOnWriteArrayList<IslandLocationCell>> islandLocationCells = GamePlay.islandLocationCells;
 
     @Override
     public void run() {
         if (!Thread.currentThread().isInterrupted()) {
-            for (int i = 0; i < islandLocationCells.length; i++) {
-                for (int j = 0; j < islandLocationCells[i].length; j++) {
-                    CopyOnWriteArrayList<Plants> arrayList = islandLocationCells[i][j].arraysCell.get(GenerateRandomFlorAndFauna.POSITION.get("Plants"));
+            for (int i = 0; i < islandLocationCells.size(); i++) {
+                for (int j = 0; j < islandLocationCells.get(i).size(); j++) {
+                    CopyOnWriteArrayList<Plants> arrayList = islandLocationCells.get(i).get(j).arraysCell.get(GenerateRandomFlorAndFauna.POSITION.get("Plants"));
                     for (Plants plants : arrayList) {
                         plants.grow();
                     }

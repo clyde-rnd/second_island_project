@@ -1,12 +1,11 @@
 package main;
 
 public class NextStepGame implements Runnable{
-    private volatile IslandLocationCell[][] islandLocationCells;
+
     private int boardHeight;
     private int boardWidth;
 
-    public NextStepGame(IslandLocationCell[][] islandLocationCells,  int boardHeight, int boardWidth) {
-        this.islandLocationCells = islandLocationCells;
+    public NextStepGame( int boardHeight, int boardWidth) {
         this.boardHeight = boardHeight;
         this.boardWidth = boardWidth;
 
@@ -16,11 +15,11 @@ public class NextStepGame implements Runnable{
     @Override
     public void run() {
         if (!Thread.currentThread().isInterrupted()) {
-            synchronized (islandLocationCells) {
-                Thread thread1 = new Thread(new TaskToMoveAnimal(islandLocationCells, boardHeight, boardWidth));
-                Thread thread2 = new Thread(new TaskReproduction(islandLocationCells));
-                Thread thread3 = new Thread(new TaskOfEating(islandLocationCells));
-                Thread thread4 = new Thread(new Statistic(islandLocationCells));
+
+                Thread thread1 = new Thread(new TaskToMoveAnimal( boardHeight, boardWidth));
+                Thread thread2 = new Thread(new TaskReproduction());
+                Thread thread3 = new Thread(new TaskOfEating());
+                Thread thread4 = new Thread(new Statistic());
 
                 thread1.start();
                 try {
@@ -50,7 +49,6 @@ public class NextStepGame implements Runnable{
                     throw new RuntimeException(e);
                 }
 
-            }
         }
     }
 }

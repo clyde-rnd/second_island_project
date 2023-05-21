@@ -6,28 +6,25 @@ import java.time.LocalDateTime;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public class TaskOfEating implements Runnable{
+    private volatile CopyOnWriteArrayList<CopyOnWriteArrayList<IslandLocationCell>> islandLocationCells = GamePlay.islandLocationCells;
 
-    private volatile IslandLocationCell[][] islandLocationCells;
 
-    public TaskOfEating(IslandLocationCell[][] islandLocationCells) {
-            this.islandLocationCells = islandLocationCells;
-        }
         @Override
         public void run() {
             if (!Thread.currentThread().isInterrupted()) {
                 System.out.println(LocalDateTime.now() + " TaskOfEating Started");
-                for (int i = 0; i < islandLocationCells.length; i++) {
-                    for (int j = 0; j < islandLocationCells[i].length; j++) {
-                        for (CopyOnWriteArrayList<FlorAndFauna> arraysCellElement : islandLocationCells[i][j].arraysCell) {
+                for (int i = 0; i < islandLocationCells.size(); i++) {
+                    for (int j = 0; j < islandLocationCells.get(i).size(); j++) {
+                        for (CopyOnWriteArrayList<FlorAndFauna> arraysCellElement : islandLocationCells.get(i).get(j).arraysCell) {
                             for (FlorAndFauna florAndFaunaElement : arraysCellElement) {
                                 if (!(florAndFaunaElement instanceof Plants) && florAndFaunaElement.getWeight() < florAndFaunaElement.getMaxWeight()) {
                                     Animal animal = (Animal) florAndFaunaElement;
-                                    FlorAndFauna florAndFaunaVictim = animal.chooseVictim(islandLocationCells[i][j].arraysCell);
+                                    FlorAndFauna florAndFaunaVictim = animal.chooseVictim(islandLocationCells.get(i).get(j).arraysCell);
                                     //если жертва найдена, то пробуем ее съесть
                                     if (florAndFaunaVictim != null) {
-                                        boolean isEat = animal.eat(florAndFaunaVictim, islandLocationCells);
+                                        boolean isEat = animal.eat(florAndFaunaVictim);
                                         if (isEat) {
-                                            Statistic.setStatisticEvent(animal.getEmoji() + "съел" + florAndFaunaVictim.getEmoji());
+                                            Statistic.setEatStatisticEvent(animal.getEmoji() + "съел" + florAndFaunaVictim.getEmoji());
                                         }
                                     }
                                 }
