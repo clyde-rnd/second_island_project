@@ -2,9 +2,8 @@ package island.predator;
 
 import island.main.Animal;
 import island.main.FlorAndFauna;
-import island.main.IslandLocationCell;
 
-import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.ArrayList;
 import java.util.concurrent.ThreadLocalRandom;
 
 public abstract class Predator extends Animal {
@@ -13,7 +12,7 @@ public abstract class Predator extends Animal {
     }
 
     @Override
-    public synchronized FlorAndFauna chooseVictim(CopyOnWriteArrayList<CopyOnWriteArrayList> islandLocation) {
+    public synchronized FlorAndFauna chooseVictim(ArrayList<ArrayList> islandLocation) {
         int count;
         int arrayNum = ThreadLocalRandom.current().nextInt(0, 15);
         count = islandLocation.get(arrayNum).size();

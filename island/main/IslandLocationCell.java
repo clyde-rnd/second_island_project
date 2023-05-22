@@ -4,29 +4,32 @@ import island.herbivores.*;
 import island.plants.Plants;
 import island.predator.*;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public class  IslandLocationCell {
-    public CopyOnWriteArrayList<CopyOnWriteArrayList> arraysCell = new CopyOnWriteArrayList<>(Arrays.asList(
-            new CopyOnWriteArrayList<Wolf>(),
-            new CopyOnWriteArrayList<BoaConstrictor>(),
-            new CopyOnWriteArrayList<Fox>(),
-            new CopyOnWriteArrayList<Bear>(),
-            new CopyOnWriteArrayList<Eagle>(),
-            new CopyOnWriteArrayList<Horse>(),
-            new CopyOnWriteArrayList<Deer>(),
-            new CopyOnWriteArrayList<Rabbit>(),
-            new CopyOnWriteArrayList<Mouse>(),
-            new CopyOnWriteArrayList<Goat>(),
-            new CopyOnWriteArrayList<Sheep>(),
-            new CopyOnWriteArrayList<Boar>(),
-            new CopyOnWriteArrayList<Buffalo>(),
-            new CopyOnWriteArrayList<Duck>(),
-            new CopyOnWriteArrayList<Caterpillar>(),
-            new CopyOnWriteArrayList<Plants>()
+    public ArrayList<ArrayList> arraysCell = new ArrayList<>(Arrays.asList(
+            new ArrayList<Wolf>(),
+            new ArrayList<BoaConstrictor>(),
+            new ArrayList<Fox>(),
+            new ArrayList<Bear>(),
+            new ArrayList<Eagle>(),
+            new ArrayList<Horse>(),
+            new ArrayList<Deer>(),
+            new ArrayList<Rabbit>(),
+            new ArrayList<Mouse>(),
+            new ArrayList<Goat>(),
+            new ArrayList<Sheep>(),
+            new ArrayList<Boar>(),
+            new ArrayList<Buffalo>(),
+            new ArrayList<Duck>(),
+            new ArrayList<Caterpillar>(),
+            new ArrayList<Plants>()
     ));
-
+ 
    private int x;
    private int y;
    private int amountPlants = 30;

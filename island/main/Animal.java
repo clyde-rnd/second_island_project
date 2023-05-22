@@ -1,8 +1,6 @@
 package island.main;
 
-import island.GamePlay;
-
-import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.ArrayList;
 import java.util.concurrent.ThreadLocalRandom;
 
 public abstract class Animal implements FlorAndFauna {
@@ -42,7 +40,7 @@ public abstract class Animal implements FlorAndFauna {
         return getEmoji();
     }
 
-    synchronized public boolean eat(CopyOnWriteArrayList<CopyOnWriteArrayList<IslandLocationCell>> gameBoardIslandArray,FlorAndFauna florAndFauna) {
+    synchronized public boolean eat(IslandLocationCell[][] gameBoardIslandArray, FlorAndFauna florAndFauna) {
         synchronized (GameBoardIsland.class) {
             String whoEaten;
             String whoIsBeingEaten;
@@ -113,9 +111,9 @@ public abstract class Animal implements FlorAndFauna {
 
             }
             int positionFlorAndFauna = GenerateRandomFlorAndFauna.POSITION.get(this.getClass().getSimpleName());
-            int positionOnArray = gameBoardIsland.gameBoardIslandArray.get(x).get(y).arraysCell.get(positionFlorAndFauna).indexOf(this);
+            int positionOnArray = gameBoardIsland.gameBoardIslandArray[x][y].arraysCell.get(positionFlorAndFauna).indexOf(this);
             if (positionOnArray != -1) {
-                gameBoardIsland.gameBoardIslandArray.get(x).get(y).arraysCell.get(positionFlorAndFauna).remove(positionOnArray);
+                gameBoardIsland.gameBoardIslandArray[x][y].arraysCell.get(positionFlorAndFauna).remove(positionOnArray);
                 //При перемещении особь теряет вес
                 this.toLoseWeight();
                 //Если вес  > 0, то то записываем новую позицию
@@ -123,11 +121,11 @@ public abstract class Animal implements FlorAndFauna {
                 if (this.getWeight() >= 0) {
                     this.x = newX;
                     this.y = newY;
-                    gameBoardIsland.gameBoardIslandArray.get(x).get(y).arraysCell.get(positionFlorAndFauna).add(this);
+                    gameBoardIsland.gameBoardIslandArray[x][y].arraysCell.get(positionFlorAndFauna).add(this);
                 } else {
                     Statistic.setDeathStatisticEvent(this.getEmoji() + "-" + "\uD83D\uDC80");
                 }
-            }else System.out.println(positionOnArray);
+            }
         }
         }
 
@@ -137,12 +135,12 @@ public abstract class Animal implements FlorAndFauna {
     }
 
     @Override
-    synchronized public boolean death(CopyOnWriteArrayList<CopyOnWriteArrayList<IslandLocationCell>> gameBoardIslandArray) {
+    synchronized public boolean death(IslandLocationCell[][] gameBoardIslandArray) {
         synchronized (GameBoardIsland.class) {
             int positionFlorAndFauna = GenerateRandomFlorAndFauna.POSITION.get(this.getClass().getSimpleName());
-            int positionOnArray = gameBoardIslandArray.get(x).get(y).arraysCell.get(positionFlorAndFauna).indexOf(this);
+            int positionOnArray = gameBoardIslandArray[x][y].arraysCell.get(positionFlorAndFauna).indexOf(this);
             if (positionOnArray != -1) {
-                gameBoardIslandArray.get(x).get(y).arraysCell.get(positionFlorAndFauna).remove(positionOnArray);
+                gameBoardIslandArray[x][y].arraysCell.get(positionFlorAndFauna).remove(positionOnArray);
                 Statistic.setDeathStatisticEvent(this.getEmoji() + "-" + "\uD83D\uDC80");
             }
 
@@ -165,5 +163,5 @@ public abstract class Animal implements FlorAndFauna {
         this.currentWeight = this.currentWeight - getMaxWeight() * 0.1f;
     }
 
-    public abstract FlorAndFauna chooseVictim(CopyOnWriteArrayList<CopyOnWriteArrayList> islandLocation);
+    public abstract FlorAndFauna chooseVictim(ArrayList<ArrayList> islandLocation);
 }

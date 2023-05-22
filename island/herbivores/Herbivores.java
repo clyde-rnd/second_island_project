@@ -4,7 +4,7 @@ import island.main.Animal;
 import island.main.FlorAndFauna;
 import island.main.GenerateRandomFlorAndFauna;
 
-import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.ArrayList;
 import java.util.concurrent.ThreadLocalRandom;
 
 public abstract class Herbivores extends Animal {
@@ -13,7 +13,7 @@ public abstract class Herbivores extends Animal {
     }
 
     @Override
-    public synchronized FlorAndFauna chooseVictim(CopyOnWriteArrayList<CopyOnWriteArrayList> islandLocation) {
+    public synchronized FlorAndFauna chooseVictim(ArrayList<ArrayList> islandLocation) {
         int count;
         int position;
 

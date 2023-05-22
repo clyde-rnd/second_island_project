@@ -1,9 +1,6 @@
 package island.plants;
 
-import island.GamePlay;
 import island.main.*;
-
-import java.util.concurrent.CopyOnWriteArrayList;
 
 public class Plants implements FlorAndFauna{
     //emoji
@@ -72,11 +69,11 @@ public class Plants implements FlorAndFauna{
     }
 
     @Override
-    synchronized public boolean death(CopyOnWriteArrayList<CopyOnWriteArrayList<IslandLocationCell>> gameBoardIslandArray) {
+    synchronized public boolean death(IslandLocationCell[][] gameBoardIslandArray) {
         int positionFlorAndFauna = GenerateRandomFlorAndFauna.POSITION.get(this.getClass().getSimpleName());
-        int positionOnArray = gameBoardIslandArray.get(x).get(y).arraysCell.get(positionFlorAndFauna).indexOf(this);
+        int positionOnArray = gameBoardIslandArray[x][y].arraysCell.get(positionFlorAndFauna).indexOf(this);
         if(this.getCurrentWeight()<=0){
-            gameBoardIslandArray.get(x).get(y).arraysCell.get(positionFlorAndFauna).remove(positionOnArray);
+            gameBoardIslandArray[x][y].arraysCell.get(positionFlorAndFauna).remove(positionOnArray);
             Statistic.setDeathStatisticEvent(this.getEmoji()+"-"+"\uD83D\uDC80");
             return true;
         }

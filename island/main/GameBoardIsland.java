@@ -2,43 +2,42 @@ package island.main;
 
 import island.plants.Plants;
 
+import java.util.ArrayList;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class GameBoardIsland {
     private int x;
     private int y;
-    public volatile CopyOnWriteArrayList<CopyOnWriteArrayList<IslandLocationCell>> gameBoardIslandArray;
+    public volatile  IslandLocationCell[][] gameBoardIslandArray;
 
 
 
 
     public void createGameBoard(int m, int n){
-         gameBoardIslandArray = new CopyOnWriteArrayList<CopyOnWriteArrayList<IslandLocationCell>>();
+         gameBoardIslandArray = new IslandLocationCell[m][n];
         this.x=m;
         this.y=n;
 
         for (int i = 0; i < m; i++) {
-            gameBoardIslandArray.add(new CopyOnWriteArrayList<IslandLocationCell>());
             for (int j = 0; j < n; j++) {
-                gameBoardIslandArray.get(i).add(j, new IslandLocationCell(i,j));
+                gameBoardIslandArray[i][j] = new IslandLocationCell(i,j);
                 }
             }
     }
 
     public synchronized void moveAnimal (){
         synchronized (this) {
-            for (int i = 0; i < gameBoardIslandArray.size(); i++) {
-                for (int j = 0; j < gameBoardIslandArray.get(i).size(); j++) {
-                    for (CopyOnWriteArrayList<FlorAndFauna> arrayFlorAndFaunaElement : gameBoardIslandArray.get(i).get(j).arraysCell) {
-                        for (FlorAndFauna objectFlorAndFaunaElement : arrayFlorAndFaunaElement) {
+            for (int i = 0; i < gameBoardIslandArray.length; i++) {
+                for (int j = 0; j < gameBoardIslandArray[i].length; j++) {
+                    for (ArrayList<FlorAndFauna> arrayFlorAndFaunaElement : gameBoardIslandArray[i][j].arraysCell) {
+                        for (int k = 0; k < arrayFlorAndFaunaElement.size(); k++) {
+                            FlorAndFauna objectFlorAndFaunaElement = arrayFlorAndFaunaElement.get(k);
                             //Проверяем может-ли данный вид передвигаться
                             if (objectFlorAndFaunaElement.maxSpeed() != 0) {
                                 Animal animal = (Animal) objectFlorAndFaunaElement;
                                 //меняем координаты у особи которую собераемся переместить
-                                synchronized (this) {
                                     animal.move(this, this.x, this.y);
-                                }
                             }
                         }
 
@@ -50,13 +49,13 @@ public class GameBoardIsland {
 
     public void eating (){
         synchronized(this) {
-            for (int i = 0; i < gameBoardIslandArray.size(); i++) {
-                for (int j = 0; j < gameBoardIslandArray.get(i).size(); j++) {
-                    for (CopyOnWriteArrayList<FlorAndFauna> arraysCellElement : gameBoardIslandArray.get(i).get(j).arraysCell) {
+            for (int i = 0; i < gameBoardIslandArray.length; i++) {
+                for (int j = 0; j < gameBoardIslandArray[i].length; j++) {
+                    for (ArrayList<FlorAndFauna> arraysCellElement : gameBoardIslandArray[i][j].arraysCell) {
                         for (FlorAndFauna florAndFaunaElement : arraysCellElement) {
                             if (!(florAndFaunaElement instanceof Plants) && florAndFaunaElement.getWeight() < florAndFaunaElement.getMaxWeight()) {
                                 Animal animal = (Animal) florAndFaunaElement;
-                                FlorAndFauna florAndFaunaVictim = animal.chooseVictim(gameBoardIslandArray.get(i).get(j).arraysCell);
+                                FlorAndFauna florAndFaunaVictim = animal.chooseVictim(gameBoardIslandArray[i][j].arraysCell);
                                 //если жертва найдена, то пробуем ее съесть
                                 if (florAndFaunaVictim != null) {
                                     boolean isEat = animal.eat(gameBoardIslandArray, florAndFaunaVictim);
@@ -75,9 +74,9 @@ public class GameBoardIsland {
 
     public void reproduction() {
         synchronized(this) {
-            for (int i = 0; i < gameBoardIslandArray.size(); i++) {
-                for (int j = 0; j < gameBoardIslandArray.get(i).size(); j++) {
-                    CopyOnWriteArrayList<FlorAndFauna> animalArray = gameBoardIslandArray.get(i).get(j).arraysCell.get(ThreadLocalRandom.current().nextInt(0, 15));
+            for (int i = 0; i < gameBoardIslandArray.length; i++) {
+                for (int j = 0; j < gameBoardIslandArray[i].length; j++) {
+                    ArrayList<FlorAndFauna> animalArray = gameBoardIslandArray[i][j].arraysCell.get(ThreadLocalRandom.current().nextInt(0, 15));
                     int size = animalArray.size();
                     if (size > 1) {
                         Animal animal = (Animal) animalArray.get(ThreadLocalRandom.current().nextInt(0, size));
@@ -91,9 +90,9 @@ public class GameBoardIsland {
     }
 
     public synchronized void growPlans (){
-        for (int i = 0; i < gameBoardIslandArray.size(); i++) {
-            for (int j = 0; j < gameBoardIslandArray.get(i).size(); j++) {
-                CopyOnWriteArrayList<Plants> arrayList = gameBoardIslandArray.get(i).get(j).arraysCell.get(GenerateRandomFlorAndFauna.POSITION.get("Plants"));
+        for (int i = 0; i < gameBoardIslandArray.length; i++) {
+            for (int j = 0; j < gameBoardIslandArray[i].length; j++) {
+               ArrayList<Plants> arrayList = gameBoardIslandArray[i][j].arraysCell.get(GenerateRandomFlorAndFauna.POSITION.get("Plants"));
                 for (Plants plants : arrayList) {
                     plants.grow();
                 }
@@ -104,10 +103,10 @@ public class GameBoardIsland {
     }
 
     public synchronized void printEmojiGameBoard(){
-        for (int i = 0; i < gameBoardIslandArray.size(); i++) {
-            for (int j = 0; j < gameBoardIslandArray.get(i).size(); j++) {
+        for (int i = 0; i < gameBoardIslandArray.length; i++) {
+            for (int j = 0; j < gameBoardIslandArray[i].length; j++) {
                 System.out.print("Cell - " + i + "X" + j + " ");
-                for (CopyOnWriteArrayList<FlorAndFauna> element: gameBoardIslandArray.get(i).get(j).arraysCell) {
+                for (ArrayList<FlorAndFauna> element: gameBoardIslandArray[i][j].arraysCell) {
                     for (FlorAndFauna florAndFaunElement: element) {
                         if (florAndFaunElement instanceof Plants){
                             System.out.print(florAndFaunElement.getEmoji()+"-"+((Plants) florAndFaunElement).getCurrentWeight());

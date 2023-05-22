@@ -1,7 +1,5 @@
 package island.main;
 
-import java.util.concurrent.CopyOnWriteArrayList;
-
 public interface FlorAndFauna {
     public String getEmoji();
     public void setX(int x);
@@ -12,7 +10,7 @@ public interface FlorAndFauna {
     public float getWeight();
     public float getMaxWeight();
     public void setWeight(float weight);
-    public  boolean death(CopyOnWriteArrayList<CopyOnWriteArrayList<IslandLocationCell>> gameBoardIslandArray);
+    public  boolean death(IslandLocationCell[][] gameBoardIslandArray);
 
 
 }
